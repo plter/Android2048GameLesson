@@ -1,5 +1,8 @@
 package com.jikexueyuan.game2048publish;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
@@ -26,16 +29,16 @@ public class AnimLayer extends FrameLayout {
 	}
 	
 	private void initLayer(){
-		
 	}
 	
 	public void createMoveAnim(final Card from,final Card to,int fromX,int toX,int fromY,int toY){
-		final Card c = from.clone();
+		
+		final Card c = getCard(from.getNum());
 		
 		LayoutParams lp = new LayoutParams(Config.CARD_WIDTH, Config.CARD_WIDTH);
 		lp.leftMargin = fromX*Config.CARD_WIDTH;
 		lp.topMargin = fromY*Config.CARD_WIDTH;
-		addView(c,lp);
+		c.setLayoutParams(lp);
 		
 		if (to.getNum()<=0) {
 			to.getLabel().setVisibility(View.INVISIBLE);
@@ -52,12 +55,31 @@ public class AnimLayer extends FrameLayout {
 			
 			@Override
 			public void onAnimationEnd(Animation animation) {
-				removeView(c);
 				to.getLabel().setVisibility(View.VISIBLE);
+				recycleCard(c);
 			}
 		});
 		c.startAnimation(ta);
 	}
+	
+	private Card getCard(int num){
+		Card c;
+		if (cards.size()>0) {
+			c = cards.remove(0);
+		}else{
+			c = new Card(getContext());
+			addView(c);
+		}
+		c.setVisibility(View.VISIBLE);
+		c.setNum(num);
+		return c;
+	}
+	private void recycleCard(Card c){
+		c.setVisibility(View.INVISIBLE);
+		c.setAnimation(null);
+		cards.add(c);
+	}
+	private List<Card> cards = new ArrayList<Card>();
 	
 	public void createScaleTo1(Card target){
 		ScaleAnimation sa = new ScaleAnimation(0.1f, 1, 0.1f, 1, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
@@ -65,5 +87,5 @@ public class AnimLayer extends FrameLayout {
 		target.setAnimation(null);
 		target.getLabel().startAnimation(sa);
 	}
-
+	
 }
