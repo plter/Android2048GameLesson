@@ -10,9 +10,9 @@ import android.graphics.Point;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.GridLayout;
+import android.widget.LinearLayout;
 
-public class GameView extends GridLayout {
+public class GameView extends LinearLayout {
 
 	public GameView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
@@ -33,7 +33,7 @@ public class GameView extends GridLayout {
 	}
 
 	private void initGameView(){
-		setColumnCount(Config.LINES);
+		setOrientation(LinearLayout.VERTICAL);
 		setBackgroundColor(0xffbbada0);
 
 
@@ -90,10 +90,17 @@ public class GameView extends GridLayout {
 
 		Card c;
 
+		LinearLayout line;
+		LinearLayout.LayoutParams lineLp;
+		
 		for (int y = 0; y < Config.LINES; y++) {
+			line = new LinearLayout(getContext());
+			lineLp = new LinearLayout.LayoutParams(-1, cardHeight);
+			addView(line, lineLp);
+			
 			for (int x = 0; x < Config.LINES; x++) {
 				c = new Card(getContext());
-				addView(c, cardWidth, cardHeight);
+				line.addView(c, cardWidth, cardHeight);
 
 				cardsMap[x][y] = c;
 			}
