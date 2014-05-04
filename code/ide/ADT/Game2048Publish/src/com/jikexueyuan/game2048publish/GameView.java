@@ -14,12 +14,6 @@ import android.widget.LinearLayout;
 
 public class GameView extends LinearLayout {
 
-	public GameView(Context context, AttributeSet attrs, int defStyle) {
-		super(context, attrs, defStyle);
-
-		initGameView();
-	}
-
 	public GameView(Context context) {
 		super(context);
 
